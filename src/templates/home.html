@@ -14,30 +14,14 @@
       <th>Age</th>
       <th>Bio</th>
     </tr>
-    <tr>
-      <td><img src= "{{url_for('static', filename= '1.jpg')}}" height="100" ></td>
-      <td>Nelly</td>
-      <td>5 weeks</td>
-      <td>I am a tiny kitten rescued by the good people at Paws Rescue Center. I love squeaky toys and cuddles.</td>
-    </tr>
-    <tr>
-      <td><img src= "{{url_for('static', filename= '2.jpg')}}" height="100" ></td>
-      <td>Yuki</td>
-      <td>8 months</td>
-      <td>I am a handsome gentle-cat. I like to dressup in bow ties.</td>
-    </tr>
-    <tr>
-      <td><img src= "{{url_for('static', filename= '3.jpg')}}" height="100" ></td>
-      <td>Basker</td>
-      <td>1 year</td>
-      <td>I love barking. But, I love my friends more.</td>
-    </tr>
-    <tr>
-      <td><img src= "{{url_for('static', filename= '4.jpg')}}" height="100" ></td>
-      <td>Mr. Furrkins</td>
-      <td>5 years</td>
-      <td>Probably napping.</td>
-    </tr>
+    {% for pet in pets %}
+      <tr>
+        <td><img src= "{{url_for('static', filename = pet["id"]|string+".jpg")}}" height="100" ></td>
+        <td>{{ pet.name }}</td>
+        <td>{{ pet["age"] }}</td>
+        <td>{{ pet.bio }}</td>
+      </tr>
+    {% endfor %}
   </table>
 </body>
 </html>
