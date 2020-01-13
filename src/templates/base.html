@@ -1,0 +1,18 @@
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
+    
+    <title>{% block title %}<!-- Placeholder for Title -->{% endblock %} - Paws Rescue Center</title>
+</head>
+<body>
+    <h1 id="title"> {% block heading %} {% endblock %} </h1>
+    <div id="content">
+        {% block content %}
+        <!-- Placeholder for Page Content -->
+        {% endblock %}
+    </div>
+    <div id="footer"> Copyright © 2019 All Rights Reserved </div>
+</body>
+</html>

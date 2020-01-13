@@ -13,3 +13,13 @@ th, td {
     padding: 8px;
     border-bottom: 1px solid #ddd;
 }
+
+#footer {
+    position: fixed;
+    width: 100%;
+    background-color: #BBC4C2;
+    color: white;
+    text-align: center;
+    left: 0;
+    bottom:0;
+}

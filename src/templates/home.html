@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Home - Paws Rescue Center</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
-</head>
-<body>
-  <h1 id = "title"><center>Paws Rescue Center 🐾</center></h1>
+{% extends "base.html" %}
+
+<!-- Replacement for Title -->
+{% block title %}
+Home
+{% endblock %}
+
+<!-- Replacement for heading of content -->
+{% block heading %}
+  <center>Paws Rescue Center 🐾</center>
+{% endblock %}
+
+<!-- Replacement for Content -->
+{% block content %}
   <table>
     <tr>
       <th>Image</th>
@@ -28,5 +33,4 @@
       </tr>
     {% endfor %}
   </table>
-</body>
-</html>
+{% endblock %}
