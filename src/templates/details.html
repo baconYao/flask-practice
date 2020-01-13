@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{pet["name"]}}'s Details - Paws Rescue Center</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
+</head>
+<body style="margin:2%"> 
+    <div style="float:left; border-style:double;">
+        <img src= "{{url_for('static', filename = pet["id"]|string+".jpg")}}" height="350" >
+    </div> 
+    <div style="float:left; margin:10px;">
+        <h1 class="title">{{ pet["name"] }}</h1>
+        <p><b>Age: &nbsp;</b> {{pet["age"]}}</p>
+        <p><b>Bio: &nbsp;</b> {{pet["bio"]}}</p>
+    </div>
+</body>
+</html>
