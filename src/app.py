@@ -1,7 +1,10 @@
 from flask import Flask, render_template, abort
+from forms import SignUpForm
 
 # make an object with the imported Flask module. This object will be our WSGI application called app
 app = Flask(__name__)
+# 設定SECRET_KEY for sinup.html 的 CSRF 使用 (必須要有SECRET_KEY)
+app.config['SECRET_KEY'] = 'dfewfew123213rwdsgert34tgfd1234trgf'
 
 """Information regarding the Pets in the System."""
 pets = [
@@ -38,6 +41,21 @@ def pet_details(pet_id):
     if pet is None:
         abort(404, description="No Pet was Found with the given ID")
     return render_template("details.html", pet=pet)
+
+
+@app.route("/signup", methods=["POST", "GET"])
+def signup():
+    """View function for Signup Page."""
+    form = SignUpForm()
+    if form.validate_on_submit():
+        # for u_email, u_password in users.items():
+        #     if u_email == form.email.data and u_password == form.password.data:
+        #         return render_template("signup.html", message="Successfully Singed up")
+        # return render_template("signup.html", form=form, message="Incorrect Email or Password")
+        print("Submitted and Valid.")
+    elif form.errors:
+        print(form.errors.items())
+    return render_template("signup.html", form=form)
 
 
 if __name__ == "__main__":

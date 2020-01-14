@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Sign-Up 
+{% endblock %}
+
+{% block heading %}
+Sign Up
+{% endblock %}
+
+{% block content %}
+<form action="{{url_for('signup')}}" method="POST" style="padding:5px;">
+    <!-- Full Name Field -->
+    {{ form.full_name.label }}: <br>
+    {{ form.full_name }} 
+    <br>
+
+    <!-- Email Field -->
+    {{ form.email.label }}: <br>
+    {{ form.email }}
+    <br>
+    {% if form.email.errors %}
+        <ul>
+            {% for error in form.email.errors %}
+            <li id="error">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Password Field -->
+    {{ form.password.label }}: <br>
+    {{ form.password }}
+    <br>
+
+    <!-- Confirm Password Field -->
+    {{ form.confirm_password.label }}: <br>
+    {{ form.confirm_password }}
+    
+    {% if form.confirm_password.errors %}
+        <ul>
+            {% for error in form.confirm_password.errors %}
+            <li id="error">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Hidden CSRF Token Field -->
+    {{ form.csrf_token }}
+    <br>
+    <!-- Submit Field -->
+    {{ form.submit }}
+</form> 
+{% endblock %}

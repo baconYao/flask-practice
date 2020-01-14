@@ -7,12 +7,19 @@
     <title>{% block title %}<!-- Placeholder for Title -->{% endblock %} - Paws Rescue Center</title>
 </head>
 <body>
+    <div>
+        <ul style="list-style-type: none;float: right;font-size: large;">
+            <li style="display:inline"><a href="{{url_for('homepage')}}">Home</a></li>
+            <li style="display:inline"><a href="{{url_for('about')}}">About</a></li>
+            <li style="display:inline"><a href="{{url_for('signup')}}">Sign Up</a></li>
+        </ul>
+    </div>
     <h1 id="title"> {% block heading %} {% endblock %} </h1>
     <div id="content">
         {% block content %}
         <!-- Placeholder for Page Content -->
         {% endblock %}
     </div>
-    <div id="footer"> Copyright © 2019 All Rights Reserved </div>
+    <div id="footer"> Copyright © 2020 All Rights Reserved </div>
 </body>
 </html>
