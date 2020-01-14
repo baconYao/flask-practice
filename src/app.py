@@ -20,6 +20,11 @@ pets = [
     {"id": 4, "name": "Mr. Furrkins", "age": "5 years", "bio": "Probably napping."},
 ]
 
+"""Information regarding the Users in the System."""
+users = [
+    {"id": 1, "full_name": "Pet Rescue Team", "email": "team@pawsrescue.co", "password": "adminpass"},
+]
+
 
 @app.route("/")
 def homepage():
@@ -48,11 +53,20 @@ def signup():
     """View function for Signup Page."""
     form = SignUpForm()
     if form.validate_on_submit():
-        # for u_email, u_password in users.items():
-        #     if u_email == form.email.data and u_password == form.password.data:
-        #         return render_template("signup.html", message="Successfully Singed up")
-        # return render_template("signup.html", form=form, message="Incorrect Email or Password")
         print("Submitted and Valid.")
+        # for full_name, email, password in users.items():
+        #     if full_name == form.full_name.data and email == form.email.data and password == form.password.data:
+        #         return render_template("signup.html", message="Successfully Singed up")
+        # return render_template("signup.html", form=form, message="Incorrect Username of Email or Password")
+        if form.validate_on_submit():
+            new_user = {
+                "id": len(users)+1,
+                "full_name": form.full_name.data,
+                "email": form.email.data,
+                "password": form.password.data
+            }
+            users.append(new_user)
+            return render_template("signup.html", message="Successfully signed up")
     elif form.errors:
         print(form.errors.items())
     return render_template("signup.html", form=form)
