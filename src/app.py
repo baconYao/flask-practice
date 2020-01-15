@@ -1,5 +1,6 @@
 from flask import Flask, render_template, abort
-from forms import SignUpForm
+from forms import SignUpForm, LoginForm
+from flask import session, redirect, url_for
 
 # make an object with the imported Flask module. This object will be our WSGI application called app
 app = Flask(__name__)
@@ -54,22 +55,40 @@ def signup():
     form = SignUpForm()
     if form.validate_on_submit():
         print("Submitted and Valid.")
-        # for full_name, email, password in users.items():
-        #     if full_name == form.full_name.data and email == form.email.data and password == form.password.data:
-        #         return render_template("signup.html", message="Successfully Singed up")
-        # return render_template("signup.html", form=form, message="Incorrect Username of Email or Password")
-        if form.validate_on_submit():
-            new_user = {
-                "id": len(users)+1,
-                "full_name": form.full_name.data,
-                "email": form.email.data,
-                "password": form.password.data
-            }
-            users.append(new_user)
-            return render_template("signup.html", message="Successfully signed up")
+        new_user = {
+            "id": len(users)+1,
+            "full_name": form.full_name.data,
+            "email": form.email.data,
+            "password": form.password.data
+        }
+        users.append(new_user)
+        return render_template("signup.html", message="Successfully signed up")
     elif form.errors:
         print(form.errors.items())
     return render_template("signup.html", form=form)
+
+
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = next(
+            (user for user in users if user["email"] == form.email.data and user["password"] == form.password.data),
+            None
+        )
+        if user is None:
+            return render_template("login.html", form=form, message="Wrong Credentials. Please Try Again.")
+        else:
+            session['user'] = user
+            return render_template("login.html", message="Successfully Logged In!")
+    return render_template("login.html", form=form)
+
+
+@app.route("/logout")
+def logout():
+    if 'user' in session:
+        session.pop('user')
+    return redirect(url_for('homepage'))
 
 
 if __name__ == "__main__":
