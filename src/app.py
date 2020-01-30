@@ -1,11 +1,35 @@
 from flask import Flask, render_template, abort
 from forms import SignUpForm, LoginForm
 from flask import session, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 
 # make an object with the imported Flask module. This object will be our WSGI application called app
 app = Flask(__name__)
 # 設定SECRET_KEY for sinup.html 的 CSRF 使用 (必須要有SECRET_KEY)
 app.config['SECRET_KEY'] = 'dfewfew123213rwdsgert34tgfd1234trgf'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///paws.db'
+db = SQLAlchemy(app)
+
+
+class Pet(db.Model):
+    """Model for Pets."""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
+    age = db.Column(db.String)
+    bio = db.Column(db.String)
+    posted_by = db.Column(db.string, db.ForeignKey("user.id"))
+
+
+class User(db.Model):
+    """Model for Users."""
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
+    password = db.Column(db.String)
+    pets = db.relationship('Pet', backref='user')
+
+
+db.create_all()
 
 """Information regarding the Pets in the System."""
 pets = [
@@ -88,7 +112,7 @@ def login():
 def logout():
     if 'user' in session:
         session.pop('user')
-    return redirect(url_for('homepage'))
+    return redirect(url_for('homepage', _scheme='https', _external=True))
 
 
 if __name__ == "__main__":
