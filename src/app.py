@@ -26,6 +26,7 @@ class User(db.Model):
     full_name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
+    # This back-reference will enable us to point to a row in User by using pet.user.
     pets = db.relationship('Pet', backref='user')
 
 
