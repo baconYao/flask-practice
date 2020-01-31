@@ -127,6 +127,8 @@ def login():
             return render_template("login.html", form=form, message="Wrong Credentials. Please Try Again.")
         else:
             print("User: %s" % user)
+            # why did we not directly store the user object in the session variable?
+            # That is a perfectly valid question. The reason is that this object is not JSON serializable and we can not use such objects in the session dictionary.
             session['user'] = user.id
             return render_template("login.html", message="User: '%s' Successfully Logged In!" % user.full_name)
     return render_template("login.html", form=form)
