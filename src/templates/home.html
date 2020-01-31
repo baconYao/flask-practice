@@ -23,8 +23,8 @@ Home
       <tr>
         <td>
           <!-- 呼叫 app.py 的 pet_details view function (等同於 route to /details/<ind:pet_id>)  -->
-          <a href="{{url_for('pet_details', pet_id = pet['id'])}}">
-              <img src= "{{url_for('static', filename = pet["id"]|string+".jpg")}}" height="100" >
+          <a href="{{url_for('pet_details', pet_id = pet.id)}}">
+            <img src= "{{url_for('static', filename = pet.id|string+".jpg")}}" height="100" >
           </a>
         </td>
         <td>{{ pet.name }}</td>

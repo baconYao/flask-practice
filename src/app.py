@@ -33,19 +33,44 @@ class User(db.Model):
 
 db.create_all()
 
-"""Information regarding the Pets in the System."""
-pets = [
-    {
-        "id": 1,
-        "name":
-        "Nelly",
-        "age": "5 weeks",
-        "bio": "I am a tiny kitten rescued by the good people at Paws Rescue Center. I love squeaky toys and cuddles."
-    },
-    {"id": 2, "name": "Yuki", "age": "8 months", "bio": "I am a handsome gentle-cat. I like to dress up in bow ties."},
-    {"id": 3, "name": "Basker", "age": "1 year", "bio": "I love barking. But, I love my friends more."},
-    {"id": 4, "name": "Mr. Furrkins", "age": "5 years", "bio": "Probably napping."},
-]
+# Create "team" user and add it to session
+team = User(full_name="Pet Rescue Team", email="team@petrescue.co", password="adminpass")
+db.session.add(team)
+
+# Create all pets
+nelly = Pet(name="Nelly", age="5 weeks", bio="I am a tiny kitten rescued by the good people at Paws Rescue Center. I love squeaky toys and cuddles.")
+yuki = Pet(name="Yuki", age="8 months", bio="I am a handsome gentle-cat. I like to dress up in bow ties.")
+basker = Pet(name="Basker", age="1 year", bio="I love barking. But, I love my friends more.")
+mrfurrkins = Pet(name="Mr. Furrkins", age="5 years", bio="Probably napping.")
+
+# Add all pets to the session
+db.session.add(nelly)
+db.session.add(yuki)
+db.session.add(basker)
+db.session.add(mrfurrkins)
+
+# Commit changes in the session
+try:
+    db.session.commit()
+except Exception as e:
+    print("Error: %s" % e)
+    db.session.rollback()
+finally:
+    db.session.close()
+
+# """Information regarding the Pets in the System."""
+# pets = [
+#     {
+#         "id": 1,
+#         "name":
+#         "Nelly",
+#         "age": "5 weeks",
+#         "bio": "I am a tiny kitten rescued by the good people at Paws Rescue Center. I love squeaky toys and cuddles."
+#     },
+#     {"id": 2, "name": "Yuki", "age": "8 months", "bio": "I am a handsome gentle-cat. I like to dress up in bow ties."},
+#     {"id": 3, "name": "Basker", "age": "1 year", "bio": "I love barking. But, I love my friends more."},
+#     {"id": 4, "name": "Mr. Furrkins", "age": "5 years", "bio": "Probably napping."},
+# ]
 
 # """Information regarding the Users in the System."""
 # users = [
@@ -57,6 +82,7 @@ pets = [
 def homepage():
     """View function for Home Page."""
     # render_template 會自動去當前目錄下的 templates folder 找尋指定的 template 來使用
+    pets = Pet.query.all()
     return render_template("home.html", pets=pets)
 
 
@@ -69,7 +95,8 @@ def about():
 @app.route("/details/<int:pet_id>")
 def pet_details(pet_id):
     """View function for Detail Page."""
-    pet = next((pet for pet in pets if pet["id"] == pet_id), None)
+    # pet = next((pet for pet in pets if pet["id"] == pet_id), None)
+    pet = Pet.query.get(pet_id)
     if pet is None:
         abort(404, description="No Pet was Found with the given ID")
     return render_template("details.html", pet=pet)
