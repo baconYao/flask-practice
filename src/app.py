@@ -47,10 +47,10 @@ pets = [
     {"id": 4, "name": "Mr. Furrkins", "age": "5 years", "bio": "Probably napping."},
 ]
 
-"""Information regarding the Users in the System."""
-users = [
-    {"id": 1, "full_name": "Pet Rescue Team", "email": "team@pawsrescue.co", "password": "adminpass"},
-]
+# """Information regarding the Users in the System."""
+# users = [
+#     {"id": 1, "full_name": "Pet Rescue Team", "email": "team@pawsrescue.co", "password": "adminpass"},
+# ]
 
 
 @app.route("/")
@@ -116,15 +116,19 @@ def signup():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = next(
-            (user for user in users if user["email"] == form.email.data and user["password"] == form.password.data),
-            None
-        )
+        # user = next(
+        #     (user for user in users if user["email"] == form.email.data and user["password"] == form.password.data),
+        #     None
+        # )
+
+        # 透過 get (Primary key) 取得 user 訊息
+        user = User.query.filter_by(email=form.email.data, password=form.password.data).first()
         if user is None:
             return render_template("login.html", form=form, message="Wrong Credentials. Please Try Again.")
         else:
-            session['user'] = user
-            return render_template("login.html", message="Successfully Logged In!")
+            print("User: %s" % user)
+            session['user'] = user.id
+            return render_template("login.html", message="User: '%s' Successfully Logged In!" % user.full_name)
     return render_template("login.html", form=form)
 
 
@@ -132,7 +136,7 @@ def login():
 def logout():
     if 'user' in session:
         session.pop('user')
-    return redirect(url_for('homepage', _scheme='https', _external=True))
+    return redirect(url_for('homepage'))
 
 
 if __name__ == "__main__":
