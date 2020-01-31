@@ -8,6 +8,7 @@ app = Flask(__name__)
 # 設定SECRET_KEY for sinup.html 的 CSRF 使用 (必須要有SECRET_KEY)
 app.config['SECRET_KEY'] = 'dfewfew123213rwdsgert34tgfd1234trgf'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///paws.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
@@ -17,7 +18,7 @@ class Pet(db.Model):
     name = db.Column(db.String, unique=True)
     age = db.Column(db.String)
     bio = db.Column(db.String)
-    posted_by = db.Column(db.string, db.ForeignKey("user.id"))
+    posted_by = db.Column(db.String, db.ForeignKey("user.id"))
 
 
 class User(db.Model):
@@ -80,13 +81,31 @@ def signup():
     form = SignUpForm()
     if form.validate_on_submit():
         print("Submitted and Valid.")
-        new_user = {
-            "id": len(users)+1,
-            "full_name": form.full_name.data,
-            "email": form.email.data,
-            "password": form.password.data
-        }
-        users.append(new_user)
+        new_user = User(
+            full_name=form.full_name.data,
+            email=form.email.data,
+            password=form.password.data
+        )
+        # new_user = {
+        #     "id": len(users)+1,
+        #     "full_name": form.full_name.data,
+        #     "email": form.email.data,
+        #     "password": form.password.data
+        # }
+        # users.append(new_user)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except Exception as e:
+            print("Sing up error: %s" % e)
+            db.session.rollback()
+            return render_template(
+                "signup.html",
+                form=form,
+                message="This Email already exists in the system! Please Log in instead."
+            )
+        finally:
+            db.session.close()
         return render_template("signup.html", message="Successfully signed up")
     elif form.errors:
         print(form.errors.items())
