@@ -1,5 +1,5 @@
 from flask import Flask, render_template, abort
-from forms import SignUpForm, LoginForm
+from forms import SignUpForm, LoginForm, EditPetForm
 from flask import session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
@@ -92,14 +92,37 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/details/<int:pet_id>")
+@app.route("/details/<int:pet_id>", methods=["POST", "GET"])
 def pet_details(pet_id):
     """View function for Detail Page."""
-    # pet = next((pet for pet in pets if pet["id"] == pet_id), None)
+    form = EditPetForm()
     pet = Pet.query.get(pet_id)
     if pet is None:
         abort(404, description="No Pet was Found with the given ID")
-    return render_template("details.html", pet=pet)
+    if form.validate_on_submit():
+        pet.name = form.name.data
+        pet.age = form.age.data
+        pet.bio = form.bio.data
+        try:
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return render_template("details.html", pet=pet, form=form, message="A Pet with this name already exists!")
+    return render_template("details.html", pet=pet, form=form)
+
+
+@app.route("/delete/<int:pet_id>")
+def delete_pet(pet_id):
+    pet = Pet.query.get(pet_id)
+    if pet is None:
+        abort(404, description="No Pet was Found with the given ID")
+    db.session.delete(pet)
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+    return redirect(url_for('homepage'))
 
 
 @app.route("/signup", methods=["POST", "GET"])
